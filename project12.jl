@@ -15,6 +15,11 @@ function main()
     T = mean(sample) #this will be updated by the new g1+g2/2
     for num in vec
         if num<T 
+         push!(g1, num)
+      end
+      if num>T 
+         push!(g2, num)
+      end
             
     end 
 
