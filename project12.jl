@@ -1,4 +1,7 @@
+import Pkg; Pkg.add("FileIO")
 using Images, Random, Statistics
+using FileIO
+
 
 img_array = Float64.(load("coins.ascii.pgm"))
 
@@ -42,7 +45,14 @@ function main()
         end
 
         T = T2
+        
     end
+    segmented = img_array .>= T
+
+
+    save("segmented.png", segmented)
 end
+
+
 
 main()
