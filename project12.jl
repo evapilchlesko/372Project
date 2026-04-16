@@ -1,33 +1,48 @@
-import Pkg; Pkg.add("Images")
+using Images, Random, Statistics
 
-img_array = load("coins.ascii.pgm")
-using Random
-using Statistics
-
+img_array = Float64.(load("coins.ascii.pgm"))
 
 function main()
-   
-    iterations=1
-    g1=[] #group 1
-    g2=[] #group 2
     vals = vec(img_array)
+
+    # Initial threshold
     sample = rand(vals, 10)
-    T = mean(sample) #this will be updated by the new g1+g2/2
-    for num in vec
-        if num<T 
-         push!(g1, num)
-      end
-      if num>T 
-         push!(g2, num)
-      end
-            
-    end 
+    T = mean(sample)
 
+    iterations = 0
 
+    while true
+        iterations += 1
 
-    #println(vals)
-    # println("Doing work...")
- end
+        # Reset groups every iteration
+        g1 = Float64[]
+        g2 = Float64[]
 
-# Call the function at the bottom of the script
+        # Partition
+        for num in vals
+            if num < T
+                push!(g1, num)
+            else
+                push!(g2, num)
+            end
+        end
+
+        # Means
+        g1_mean = mean(g1)
+        g2_mean = mean(g2)
+
+        # New threshold
+        T2 = (g1_mean + g2_mean) / 2
+
+        # Stop condition
+        if abs(T2 - T) < 0.001 || iterations >= 100
+            println("Final threshold: ", T2)
+            println("Iterations: ", iterations)
+            break
+        end
+
+        T = T2
+    end
+end
+
 main()
